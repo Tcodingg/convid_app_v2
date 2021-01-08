@@ -3,40 +3,41 @@ import './App.css';
 import axios from 'axios';
 import Header from './Header';
 import Rows from './Rows';
+import Table from './table/Table';
+import { totalPopulation } from './api/api';
+import { fetchedByCountries } from './table/api';
 
 function App() {
   const [confirmedValue, SetConfirmedValue] = useState(0);
   const [recoveredValue, SetRecoveredValue] = useState(0);
   const [deathsValue, SetDeathsValue] = useState(0);
+  const [result, setResult] = useState('');
 
-  const url = 'https://covid19.mathdro.id/api/';
-  const allProvinces = [];
+  // useEffect(async () => {
+  //   const fetchedData = await fetchData();
+  //   setResult(fetchedData);
+  // }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const {
-          data: { confirmed, recovered, deaths },
-        } = await axios.get(url);
-
-        const allData = {
-          confirmed,
-          recovered,
-          deaths,
-        };
-        SetConfirmedValue(confirmed.value);
-        SetRecoveredValue(recovered.value);
-        SetDeathsValue(deaths.value);
-        console.log(deaths);
-      } catch (error) {
-        console.log(error);
-      }
+    const totalInfected = async () => {
+      const data = await totalPopulation();
+      // setResult(data);
+      SetConfirmedValue(data.confirmed.value);
+      SetRecoveredValue(data.recovered.value);
+      SetDeathsValue(data.deaths.value);
     };
-    fetchData();
+    totalInfected();
   }, []);
 
-  if (!confirmedValue) {
-    return <div></div>;
-  }
+  // useEffect(() => {
+  //   const fetchedData = async () => {
+  //     const data = await fetchedByCountries();
+  //     setResult(data.data.data);
+  //   };
+  //   fetchedData();
+  //   console.log(result);
+  // }, []);
+
   return (
     <div className='App'>
       <Header />
@@ -58,6 +59,8 @@ function App() {
           />
         </tbody>
       </table>
+
+      <Table />
     </div>
   );
 }
