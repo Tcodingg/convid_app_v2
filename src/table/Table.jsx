@@ -3,24 +3,31 @@ import { fetchedByCountries } from './api';
 
 export default function Table() {
   const [result, setResult] = useState('');
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState('United Kingdom');
+
+  const [active, setActive] = useState('');
+  const [confirmed, setConfirmed] = useState('');
+  const [recovered, setRecovered] = useState('');
+  const [deaths, setDeaths] = useState('');
 
   useEffect(() => {
     const fetchedData = async () => {
-      const respo = await fetchedByCountries();
-      const allData = {};
-      //   setResult(data);
-      console.log(respo.data[1].countryRegion);
+      const { data } = await fetchedByCountries();
+      setResult(data);
     };
     fetchedData();
-    // console.log(result);
-    console.log('finished..');
   }, []);
+
+  if (!result) {
+    return <div></div>;
+  }
 
   return (
     <table>
       <thead>
         <tr>
+          <th>Province/State</th>
+
           <th>Active</th>
           <th>Confirmed</th>
           <th>Recovered</th>
@@ -28,11 +35,19 @@ export default function Table() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>12</td>
-          <td>12</td>
-          <td>12</td>
-        </tr>
+        {result.map((all, index) => {
+          if (all.countryRegion === country) {
+            return (
+              <tr key={index}>
+                <th>{all.provinceState}</th>
+                <th>{all.active}</th>
+                <th>{all.confirmed}</th>
+                <th>{all.recovered}</th>
+                <th>{all.deaths}</th>
+              </tr>
+            );
+          }
+        })}
       </tbody>
     </table>
   );
