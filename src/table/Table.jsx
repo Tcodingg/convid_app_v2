@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { fetchedByCountries } from './api';
 
-export default function Table() {
+export default function Table(props) {
   const [result, setResult] = useState([]);
-  const [country, setCountry] = useState('');
+  // const [country, setCountry] = useState('Canada');
   const [sortCol, setSortCol] = useState('descending');
   const [column, setColumn] = useState('');
+
+  let countryInput = props.countryName;
+  let country = countryInput.charAt(0).toUpperCase() + countryInput.slice(1);
+
+  console.log(country);
   useEffect(() => {
     const fetchedData = async () => {
       const { data } = await fetchedByCountries();
 
-      // setResult(data);
       setResult(() =>
-        data.filter((region) => region.countryRegion === 'United Kingdom')
+        data.filter((region) => region.countryRegion === country)
       );
     };
     fetchedData();
-  }, []);
+  }, [country]);
   function sortField(key) {
     if (sortCol === 'ascending') {
       const aso = [...result].sort((a, b) => {
@@ -24,7 +28,7 @@ export default function Table() {
       });
       setResult(aso);
       setSortCol('descending');
-    } else if (sortCol === 'descending') {
+    } else {
       const dso = [...result].sort((a, b) => {
         return a[key] - b[key];
       });
@@ -32,6 +36,7 @@ export default function Table() {
       setSortCol('ascending');
     }
   }
+
   return (
     <table>
       <thead>
