@@ -31,16 +31,14 @@ function App() {
   function searchInputCountry(e) {
     if (e.key === 'Enter') {
       setResult(e.target.value);
+      e.target.value = '';
     }
-
-    // setResult(e.target.value);
   }
 
   return (
     <div className='App'>
       <Map />
       <Header />
-      {/* <input type='text' /> */}
       <Search searchInput={searchInputCountry} />
       <table className='tableContainer'>
         <thead>
