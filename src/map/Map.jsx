@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { fetchedByCountries } from '../table/api';
+import './style.css';
+import axios from 'axios';
 
 function Map() {
   const [viewport, setViewport] = useState({
@@ -9,8 +11,12 @@ function Map() {
     height: '50vh',
   });
   const [locs, setLocs] = useState([]);
-  let uniq = {};
+  const [responses, setResponses] = useState([]);
+  const [totalActive, setTotalActive] = useState(0);
+  const url =
+    'https://opendata.arcgis.com/datasets/1cb306b5331945548745a5ccd290188e_2.geojson';
 
+  let uniq = {};
   useEffect(() => {
     const countriesLocation = async () => {
       try {
@@ -20,6 +26,8 @@ function Map() {
         //     (filterNull) => filterNull.lat !== null || filterNull.long !== null
         //   )
         // );
+
+        setTotalActive(() => {});
         setLocs(() =>
           data
             .filter(
@@ -36,10 +44,32 @@ function Map() {
       }
     };
     countriesLocation();
-    console.log(locs);
-    // locs.map((loc) => console.log(`${loc.long} ${loc.lat}`));
+    // console.log(locs);
   }, []);
+  function showInfo() {}
+  useEffect(() => {
+    const secondFetch = async () => {
+      var {
+        data: { features },
+      } = await axios.get(url);
 
+      // setResponses(features);
+      setResponses(() =>
+        features.filter(
+          (a) => a.properties.Long_ !== null || a.properties.Lat !== null
+          // a.properties.Active !== null
+        )
+      );
+    };
+    secondFetch();
+  }, []);
+  console.log(responses);
+
+  responses.map((x) => {
+    return console.log(x.properties.Active / 1000 + 'px');
+  });
+
+  // console.log(responses.properties);
   return (
     <div>
       <ReactMapGL
@@ -50,11 +80,24 @@ function Map() {
           setViewport(viewport);
         }}
       >
-        {locs.map((longlat, index) => {
+        {responses.map((longlat, index) => {
           return (
-            <Marker key={index} longitude={longlat.long} latitude={longlat.lat}>
-              <div style={{ fontSize: '10px', background: 'red' }}>
-                {longlat.countryRegion}
+            <Marker
+              className='marker'
+              key={index}
+              longitude={longlat.properties.Long_}
+              latitude={longlat.properties.Lat}
+            >
+              <div
+                onClick={showInfo}
+                className='countryInfo'
+                style={{
+                  width: `"calc(${longlat.properties.Active}/1000)px"`,
+                  height: `"calc(${longlat.properties.Active}/1000)px"`,
+                  background: 'red',
+                }}
+              >
+                {longlat.Country_Region}
               </div>
             </Marker>
           );

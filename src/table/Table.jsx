@@ -10,7 +10,7 @@ export default function Table(props) {
   let countryInput = props.countryName;
   let country = countryInput.charAt(0).toUpperCase() + countryInput.slice(1);
 
-  console.log(country);
+  // console.log(country);
   useEffect(() => {
     const fetchedData = async () => {
       const { data } = await fetchedByCountries();

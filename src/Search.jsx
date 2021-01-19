@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 
 const Search = (props) => {
   return (
-    <input
-      onKeyDown={props.searchInput}
-      placeholder='Enter Country...'
-      type='text'
-    />
+    <div>
+      <input
+        onChange={props.handleOnChange}
+        onKeyDown={props.handleOnKeydown}
+        placeholder='Enter Country...'
+        type='text'
+        value={props.inputVal}
+      />
+    </div>
   );
 };
 

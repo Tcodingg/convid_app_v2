@@ -7,3 +7,15 @@ body {
   background-color: #333;
   color: white;
 }
+
+/* input/ search box----------- */
+.searchContainer {
+  position: relative;
+}
+
+.searchContainer .options {
+  background-color: red;
+  position: absolute;
+  width: 150px;
+  font-size: 20px;
+}

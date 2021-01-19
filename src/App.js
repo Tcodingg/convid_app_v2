@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import axios from 'axios';
 import Map from './map/Map';
 import Header from './Header';
 import Rows from './Rows';
 import Table from './table/Table';
 import { totalPopulation } from './api/api';
-import { fetchedByCountries } from './table/api';
 import Search from './Search';
+import { countryList } from './countriesList';
 
 function App() {
   const [confirmedValue, SetConfirmedValue] = useState(0);
   const [recoveredValue, SetRecoveredValue] = useState(0);
   const [deathsValue, SetDeathsValue] = useState(0);
-  const [result, setResult] = useState('Canada');
+  const [inputVal, setInputVal] = useState('');
+
+  const [countryInput, setCountryInput] = useState('Canada');
+  const [autoCompleteData, setautoCompleteData] = useState([]);
+  const [autoCompleteInput, setautoCompleteInput] = useState([]);
 
   //Fetching data----------------------------------
   useEffect(() => {
     const totalInfected = async () => {
       const data = await totalPopulation();
-      // setResult(data);
       SetConfirmedValue(data.confirmed.value);
       SetRecoveredValue(data.recovered.value);
       SetDeathsValue(data.deaths.value);
@@ -28,18 +30,59 @@ function App() {
   }, []);
 
   //Search component-function -------------------
-  function searchInputCountry(e) {
-    if (e.key === 'Enter') {
-      setResult(e.target.value);
-      e.target.value = '';
+  function handleOnKeydown(e) {
+    if (e.key === 'Enter' && autoCompleteInput.length > 0) {
+      setCountryInput(e.target.value);
+      setautoCompleteData([]);
     }
+    return;
+  }
+
+  function handleOnChange(e) {
+    const textInput = e.target.value;
+    setautoCompleteInput(textInput);
+    setInputVal(textInput);
+  }
+
+  useEffect(() => {
+    if (autoCompleteInput.length > 0) {
+      setautoCompleteData(
+        countryList.filter((filter) => {
+          return filter
+            .toLowerCase()
+            .startsWith(autoCompleteInput.toLowerCase());
+        })
+      );
+    } else {
+      setautoCompleteData([]);
+    }
+  }, [autoCompleteInput]);
+  function handleOption(e) {
+    setCountryInput(e.target.value);
+    setInputVal(e.target.value);
+    setautoCompleteData([]);
   }
 
   return (
     <div className='App'>
       <Map />
       <Header />
-      <Search searchInput={searchInputCountry} />
+      <div className='searchContainer'>
+        <Search
+          handleOnKeydown={handleOnKeydown}
+          handleOnChange={handleOnChange}
+          inputVal={inputVal}
+        />
+        <div className='options'>
+          {autoCompleteData.map((country) => {
+            return (
+              <option onClick={handleOption} value={country}>
+                {country}
+              </option>
+            );
+          })}
+        </div>
+      </div>
       <table className='tableContainer'>
         <thead>
           <tr className='tblHead'>
@@ -57,7 +100,7 @@ function App() {
         </tbody>
       </table>
 
-      <Table countryName={result} />
+      <Table countryName={countryInput} />
     </div>
   );
 }

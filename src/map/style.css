@@ -1,0 +1,14 @@
+.marker {
+  background: blue;
+  /* width: 10px;
+  height: 10px; */
+  border-radius: 50%;
+}
+
+/* .countryInfo {
+  display: none;
+}
+
+.marker:hover > .countryInfo {
+  display: block;
+} */
