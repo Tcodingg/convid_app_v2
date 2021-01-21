@@ -1,14 +1,41 @@
-.marker {
-  background: blue;
-  /* width: 10px;
-  height: 10px; */
-  border-radius: 50%;
+body {
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
 }
 
-/* .countryInfo {
+.countryInfo {
   display: none;
+  background: white;
+  opacity: 0.5;
+  height: 200px;
+  width: 200px;
+  color: black;
+  margin-left: -80px;
+  border-radius: 10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
-.marker:hover > .countryInfo {
+.mapIcons {
+  height: 30px;
+  width: 30px;
+}
+
+.mapIcons:hover + .countryInfo {
   display: block;
-} */
+}
+
+.countryName {
+  text-align: center;
+  padding: 5px;
+  font-size: 30px;
+  border-bottom: 3px solid black;
+}
+.countriesData {
+  width: 100%;
+}
+
+.countriesData th,
+td {
+  text-align: left;
+  padding: 5px;
+}
